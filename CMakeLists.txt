@@ -15,9 +15,11 @@ endif()
 
 add_compile_options(-Wall -Wextra -Wpedantic)
 
-# GTK4 via pkg-config
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
+# GTK4 via pkg-config (optional so configuration still works without GTK4)
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+    pkg_check_modules(GTK4 QUIET IMPORTED_TARGET gtk4)
+endif()
 
 # Collect all source files under src/
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/*.c")
@@ -26,4 +28,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/incl")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::GTK4)
+if(TARGET PkgConfig::GTK4)
+    target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::GTK4)
+else()
+    message(WARNING "GTK4 not found; continuing without GTK4 linkage")
+endif()
