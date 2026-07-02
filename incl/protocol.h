@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <time.h>
 
 typedef struct s_dm_msg
 {
@@ -7,6 +8,7 @@ typedef struct s_dm_msg
    uint64_t       sender_id;
    uint64_t       reciever_id;
    char           *content;
+   time_t         msg_timestamp;
 
 } t_dm_msg;
 
